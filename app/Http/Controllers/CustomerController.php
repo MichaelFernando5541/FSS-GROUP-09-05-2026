@@ -43,24 +43,31 @@ class CustomerController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $customer = \App\Models\Customer::findOrFail($id);
+        return view('customers.edit', compact('customer'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
+        ]);
+
+        $customer = \App\Models\Customer::findOrFail($id);
+        $customer->update($validated);
+
+        return redirect()->route('customers.index')->with('success', 'Data Pelanggan berhasil diperbarui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $customer = \App\Models\Customer::findOrFail($id);
+        $customer->delete();
+
+        return redirect()->route('customers.index')->with('success', 'Pelanggan berhasil dihapus dari sistem!');
     }
 }

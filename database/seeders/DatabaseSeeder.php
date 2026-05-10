@@ -3,23 +3,27 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Membuat Akun Master Admin CV. Nusantara Motor
+        User::create([
+            'name' => 'AdminSementara', // Nama Anda sebagai Master
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('password123'), // Silakan ganti sandinya nanti
+            'role' => 'admin', 
+        ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Opsional: Buat akun Kasir untuk simulasi
+        User::create([
+            'name' => 'KasirSementara',
+            'email' => 'kasir@gmail.com',
+            'password' => Hash::make('password123'),
+            'role' => 'kasir',
         ]);
     }
 }

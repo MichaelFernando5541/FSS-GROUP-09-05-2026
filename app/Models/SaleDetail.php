@@ -13,4 +13,10 @@ class SaleDetail extends Model
         'price',
         'subtotal',
     ];
+
+    // Fungsi ini wajib ada di sini agar Laravel tahu detail ini milik item mana
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
 }
