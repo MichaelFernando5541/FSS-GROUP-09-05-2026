@@ -12,8 +12,8 @@ return new class extends Migration
    public function up()
 {
     Schema::table('customers', function (Blueprint $table) {
-        // Menambahkan kolom nik_npwp (Boleh kosong/nullable jika pelanggan tidak mau ngasih)
-        $table->string('nik_npwp')->nullable()->after('nama');
+        // Ganti 'nama' dengan nama kolom yang benar-benar ada di database Anda
+        $table->string('nik_npwp')->nullable()->after('name'); 
     });
 }
 
