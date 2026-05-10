@@ -20,17 +20,25 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
+        // 1. Validasi data dari form (SUDAH DITAMBAHKAN NIK/NPWP)
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'nik_npwp' => 'nullable|string|max:50', // Nullable agar tidak wajib diisi
+            'telepon' => 'required|string|max:20',
+            'alamat' => 'required|string'
         ]);
 
-        Customer::create($validated);
+        // 2. Simpan ke database
+        \App\Models\Customer::create([
+            'nama' => $request->nama,
+            'nik_npwp' => $request->nik_npwp, // Menyimpan data NIK/NPWP
+            'telepon' => $request->telepon,
+            'alamat' => $request->alamat,
+        ]);
 
-        return redirect()->route('customers.index');
+        // 3. Kembalikan ke halaman daftar dengan pesan sukses
+        return redirect()->route('customers.index')->with('success', 'Data pelanggan baru berhasil disimpan!');
     }
-
 
     /**
      * Display the specified resource.
@@ -51,13 +59,17 @@ class CustomerController extends Controller
 
     public function update(Request $request, $id)
     {
+        // PERBAIKAN: Menggunakan nama kolom bahasa Indonesia yang benar dan menambah NIK/NPWP
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
+            'nama' => 'required|string|max:255',
+            'nik_npwp' => 'nullable|string|max:50',
+            'telepon' => 'required|string|max:20',
+            'alamat' => 'required|string',
         ]);
 
         $customer = \App\Models\Customer::findOrFail($id);
+        
+        // Update data pelanggan
         $customer->update($validated);
 
         return redirect()->route('customers.index')->with('success', 'Data Pelanggan berhasil diperbarui!');

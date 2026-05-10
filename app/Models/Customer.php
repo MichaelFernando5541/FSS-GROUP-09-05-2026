@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     protected $fillable = [
-        'name',
-        'phone',
-        'address',
+        'nama', 
+        'nik_npwp', // <--- Tambahkan baris ini
+        'telepon', 
+        'alamat'
     ];
 }

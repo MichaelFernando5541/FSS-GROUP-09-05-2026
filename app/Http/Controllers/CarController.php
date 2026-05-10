@@ -45,7 +45,7 @@ class CarController extends Controller
         ]);
 
         $validated['biaya_operasional'] = $validated['biaya_operasional'] ?? 0;
-        $validated['status'] = 'Tersedia'; // Default saat baru ditambah [cite: 241]
+        $validated['status'] = 'Tersedia'; // Default saat baru ditambah
 
         Car::create($validated);
 
@@ -53,14 +53,60 @@ class CarController extends Controller
     }
 
     // Menghapus mobil dari database
-public function destroy(Car $car)
-{
-    if ($car->status === 'Terjual') {
-        // Mengirimkan flash message dengan key 'error'
-        return redirect()->route('cars.index')->with('error', 'Unit ini sudah terjual! Hapus transaksi penjualannya terlebih dahulu jika ingin menghapus unit ini dari inventori.');
+    public function destroy(Car $car)
+    {
+        if ($car->status === 'Terjual') {
+            // Mengirimkan flash message dengan key 'error'
+            return redirect()->route('cars.index')->with('error', 'Unit ini sudah terjual! Hapus transaksi penjualannya terlebih dahulu jika ingin menghapus unit ini dari inventori.');
+        }
+
+        $car->delete();
+        return redirect()->route('cars.index')->with('success', 'Unit berhasil dihapus.');
     }
 
-    $car->delete();
-    return redirect()->route('cars.index')->with('success', 'Unit berhasil dihapus.');
-}
+    public function edit($id)
+    {
+        // Menarik data mobil yang mau diedit
+        $car = \App\Models\Car::findOrFail($id);
+        
+        // PENGAMANAN: Blokir akses jika status mobil sudah Terjual
+        if ($car->status === 'Terjual') {
+            return redirect()->route('cars.index')
+                ->with('error', 'Akses ditolak! Data unit yang sudah terjual telah dikunci oleh sistem untuk menjaga integritas laporan.');
+        }
+        
+        // Melempar data ke halaman view edit yang baru kita buat
+        return view('cars.edit', compact('car'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $car = \App\Models\Car::findOrFail($id);
+
+        // PENGAMANAN GANDA: Tolak penyimpanan jika status mobil sudah Terjual
+        // (Berjaga-jaga jika ada yang mencoba bypass (melewati) tampilan)
+        if ($car->status === 'Terjual') {
+            return redirect()->route('cars.index')
+                ->with('error', 'Update ditolak! Data unit yang sudah terjual telah dikunci oleh sistem.');
+        }
+
+        // Validasi input
+        $request->validate([
+            'merk' => 'required|string',
+            'tipe' => 'required|string',
+            'tahun' => 'required|numeric',
+            'kondisi' => 'required|string',
+            'nopol' => 'required|string',
+            'no_rangka' => 'required|string',
+            'no_mesin' => 'required|string',
+            'harga_beli' => 'required|numeric',
+            'biaya_operasional' => 'required|numeric',
+        ]);
+
+        // Temukan dan update data di database
+        $car->update($request->all());
+
+        // Kembali ke halaman stok dengan pesan sukses
+        return redirect()->route('cars.index')->with('success', 'Data unit mobil berhasil diperbarui!');
+    }
 }

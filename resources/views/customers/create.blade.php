@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-black text-gray-800 leading-tight">Tambah Pelanggan Baru</h2>
-        <p class="text-xs text-gray-400 font-medium uppercase mt-1 tracking-wider">Masukkan data profil klien atau instansi ke dalam database sistem</p>
+        <p class="text-xs text-gray-400 font-medium uppercase mt-1 tracking-wider">Masukkan data profil klien atau instansi ke dalam database PIMS</p>
     </x-slot>
 
     <div class="max-w-4xl mx-auto mt-8">
@@ -17,6 +17,7 @@
                 </div>
 
                 <div class="p-8 space-y-6">
+                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2 ml-1">Nama Pelanggan / Instansi</label>
@@ -27,15 +28,26 @@
                         </div>
                         
                         <div>
-                            <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2 ml-1">No. Telepon / WA</label>
+                            <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-blue-500 mb-2 ml-1">KTP (NIK) / NPWP Instansi</label>
                             <div class="relative">
-                                <span class="absolute inset-y-0 left-4 flex items-center text-gray-400 font-bold text-xs">📞</span>
-                                <input type="text" name="telepon" value="{{ old('telepon') }}" required
-                                       class="w-full pl-10 pr-4 py-3.5 rounded-xl border-gray-100 bg-gray-50/50 focus:border-gray-900 focus:ring-0 text-sm font-bold text-gray-700 transition font-mono"
-                                       placeholder="081234567890">
+                                <span class="absolute inset-y-0 left-4 flex items-center text-blue-400 font-bold text-xs">🪪</span>
+                                <input type="text" name="nik_npwp" value="{{ old('nik_npwp') }}"
+                                       class="w-full pl-10 pr-4 py-3.5 rounded-xl border-blue-100 bg-blue-50/30 focus:border-blue-500 focus:ring-0 text-sm font-black text-gray-800 transition tracking-wider"
+                                       placeholder="Opsional (Ketik nomor jika ada)">
                             </div>
-                            @error('telepon') <span class="text-xs text-red-500 font-bold mt-1 block">{{ $message }}</span> @enderror
+                            @error('nik_npwp') <span class="text-xs text-red-500 font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2 ml-1">No. Telepon / WA</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-4 flex items-center text-gray-400 font-bold text-xs">📞</span>
+                            <input type="text" name="telepon" value="{{ old('telepon') }}" required
+                                   class="w-full pl-10 pr-4 py-3.5 rounded-xl border-gray-100 bg-gray-50/50 focus:border-gray-900 focus:ring-0 text-sm font-bold text-gray-700 transition font-mono"
+                                   placeholder="081234567890">
+                        </div>
+                        @error('telepon') <span class="text-xs text-red-500 font-bold mt-1 block">{{ $message }}</span> @enderror
                     </div>
 
                     <div>
