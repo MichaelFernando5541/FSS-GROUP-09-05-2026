@@ -8,20 +8,34 @@ use Illuminate\Http\Request;
 class CarController extends Controller
 {
     // Menampilkan halaman Split-Pane
-    public function index(Request $request)
-    {
-        $cars = Car::latest()->get(); // Ambil semua mobil
-        
-        // Cek apakah ada mobil yang diklik untuk dilihat detailnya di panel kanan
-        $selectedCar = null;
-        if ($request->has('show')) {
-            $selectedCar = Car::find($request->show);
-        } elseif ($cars->count() > 0) {
-            $selectedCar = $cars->first(); // Default tampilkan mobil pertama
-        }
+public function index(Request $request)
+{
+    // Mulai query ke model Car
+    $query = \App\Models\Car::query();
 
-        return view('cars.index', compact('cars', 'selectedCar'));
+    // Jika ada inputan pencarian
+    if ($request->filled('search')) {
+        $search = $request->search;
+        
+        // GANTI 'plat_nomor' MENJADI 'nopol' DI SINI
+        $query->where('merk', 'like', "%{$search}%")
+              ->orWhere('tipe', 'like', "%{$search}%")
+              ->orWhere('nopol', 'like', "%{$search}%");
     }
+
+    // Ambil data terbaru
+    $cars = $query->latest()->get();
+
+    // Pastikan variabel $selectedCar aman (untuk split-screen)
+    $selectedCar = null;
+    
+    // Jika ada parameter 'show' di URL, ambil data mobil tersebut
+    if ($request->filled('show')) {
+        $selectedCar = \App\Models\Car::find($request->show);
+    }
+
+    return view('cars.index', compact('cars', 'selectedCar'));
+}
 
     // Menampilkan form tambah mobil baru
     public function create()

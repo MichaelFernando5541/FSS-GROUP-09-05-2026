@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory; // 1. TAMBAHKAN INI
 use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
@@ -12,4 +13,5 @@ class Customer extends Model
         'telepon', 
         'alamat'
     ];
+    protected $guarded = ['id'];
 }

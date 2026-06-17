@@ -7,12 +7,27 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    public function index()
-    {
-        $customers = Customer::all();
-        return view('customers.index', compact('customers'));
+  public function index(Request $request)
+{
+    // 1. Menggunakan model Customer (sesuai standar sistem kamu)
+    $query = \App\Models\Customer::query();
+
+    // 2. Jika ada inputan pencarian di kotak search
+    if ($request->filled('search')) {
+        $search = $request->search;
+        
+        // 3. Cari berdasarkan nama, telepon, atau alamat
+        $query->where('nama', 'like', "%{$search}%")
+              ->orWhere('telepon', 'like', "%{$search}%") // Disesuaikan dengan kolom 'telepon'
+              ->orWhere('alamat', 'like', "%{$search}%");
     }
 
+    // 4. Ambil data dari database
+    $customers = $query->latest()->get(); 
+
+    // 5. Kirim data ke file view resources/views/customers/index.blade.php
+    return view('customers.index', compact('customers'));
+}
     public function create()
     {
         return view('customers.create');

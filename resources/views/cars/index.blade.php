@@ -15,13 +15,32 @@
         
         <div class="lg:col-span-4 flex flex-col gap-4">
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-[calc(100vh-220px)]">
-                <div class="p-5 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
-                    <h3 class="font-black text-gray-800 uppercase text-[10px] tracking-[0.2em]">Daftar Stok ({{ $cars->count() }})</h3>
-                </div>
                 
-                <div class="overflow-y-auto p-4 space-y-3 custom-scrollbar">
+                <div class="p-5 border-b border-gray-50 bg-gray-50/50 flex flex-col gap-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-black text-gray-800 uppercase text-[10px] tracking-[0.2em]">Daftar Stok ({{ $cars->count() }})</h3>
+                    </div>
+                    
+                    <form action="{{ route('cars.index') }}" method="GET" class="w-full">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                            <input type="text" 
+                                   name="search" 
+                                   value="{{ request('search') }}" 
+                                   class="w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-900 focus:border-slate-900 text-sm transition-colors bg-white shadow-inner" 
+                                   placeholder="Cari merk, tipe, plat..."
+                                   autocomplete="off">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
                     @forelse($cars as $car)
-                        <a href="{{ route('cars.index', ['show' => $car->id]) }}" 
+                        <a href="{{ route('cars.index', ['show' => $car->id, 'search' => request('search')]) }}" 
                            class="block p-4 rounded-2xl border transition-all duration-200 group {{ ($selectedCar && $selectedCar->id == $car->id) ? 'bg-gray-900 border-gray-900 shadow-xl shadow-gray-200' : 'bg-white border-gray-100 hover:border-gray-300 hover:shadow-md' }}">
                             
                             <div class="flex justify-between items-start">
@@ -49,8 +68,9 @@
                             </div>
                         </a>
                     @empty
-                        <div class="py-20 text-center opacity-30">
-                            <p class="text-xs font-bold uppercase tracking-widest text-gray-400">Belum ada unit.</p>
+                        <div class="py-20 text-center opacity-40 flex flex-col items-center">
+                            <svg class="w-10 h-10 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <p class="text-xs font-bold uppercase tracking-widest text-gray-500">Tidak ada data ditemukan</p>
                         </div>
                     @endforelse
                 </div>
@@ -151,7 +171,8 @@
                                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                                 <span class="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em]">Aset Telah Terjual — Data Terkunci</span>
                             </div>
-                        @endif </div>
+                        @endif
+                    </div>
 
                 </div>
             @else
@@ -162,7 +183,8 @@
                     <h4 class="text-sm font-black text-gray-500 uppercase tracking-widest">Detail Tidak Tersedia</h4>
                     <p class="text-xs text-gray-400 mt-2 font-medium">Pilih salah satu unit mobil dari daftar di sebelah kiri untuk melihat rincian lengkapnya di sini.</p>
                 </div>
-            @endif </div>
+            @endif 
+        </div>
     </div>
     
     <style>

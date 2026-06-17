@@ -9,13 +9,15 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-  public function up(): void
+ public function up(): void
 {
     Schema::create('customers', function (Blueprint $table) {
         $table->id();
-        $table->string('name');
-        $table->string('phone')->nullable();
-        $table->text('address')->nullable();
+        // Pastikan kolom-kolom ini ada dan namanya sama persis
+        $table->string('nama');
+        $table->string('nik_npwp')->nullable(); // nullable() agar boleh kosong
+        $table->string('telepon');
+        $table->text('alamat');
         $table->timestamps();
     });
 }
